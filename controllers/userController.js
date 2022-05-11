@@ -5,6 +5,7 @@ const User = require("../models/users");
 const Otp = require("../models/otp");
 const sendEmail = require("../helpers/sendEmail");
 const { response } = require("express");
+const upload = require('../middlewares/upload')
 const saltRounds = 10;
 module.exports = {
   register: async (req, res) => {
@@ -177,6 +178,15 @@ module.exports = {
   uploadProfileImage: async (req, res) => {
     try {
       const { id } = req.body;
+      upload(req, res, err => {
+        if (err instanceof multer.MulterError) {
+          console.log("multer error when uploading file:", err);
+          return res.sendStatus(500);
+        } else if (err) {
+          console.log("unknown error when uploading file:", err);
+          return res.sendStatus(500);
+        }
+      })
       const file = req.file;
       const schema = joi.alternatives(
         joi.object({
