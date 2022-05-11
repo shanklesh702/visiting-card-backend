@@ -186,8 +186,7 @@ module.exports = {
           console.log("unknown error when uploading file:", err);
           return res.sendStatus(500);
         }
-      })
-      const file = req.file;
+        const file = req.file;
       const schema = joi.alternatives(
         joi.object({
           id: joi.string().required(),
@@ -221,6 +220,8 @@ module.exports = {
           }
         });
       }
+      })
+      
     } catch (error) {
       return res.json({
         message: "Internal server error",
