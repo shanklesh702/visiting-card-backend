@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.static("public"));
 app.use("/upload",express.static("upload"));
 global.__baseDir="https://visiting-card-backend.herokuapp.com";
-mongoose.connect(dbconfig.localUrl,{
+mongoose.connect(dbconfig.url,{
     useUnifiedTopology:true,
     useNewUrlParser:true,
 }).then(console.log("mongoDb connected successfuly"));
