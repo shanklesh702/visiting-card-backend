@@ -6,6 +6,7 @@ const Otp = require("../models/otp");
 const sendEmail = require("../helpers/sendEmail");
 const { response } = require("express");
 const upload = require('../middlewares/upload')
+const multer = require('multer')
 const saltRounds = 10;
 module.exports = {
   register: async (req, res) => {
@@ -178,6 +179,7 @@ module.exports = {
   uploadProfileImage: async (req, res) => {
     try {
       const { id } = req.body;
+      console.log(id)
       upload(req, res, err => {
         if (err instanceof multer.MulterError) {
           console.log("multer error when uploading file:", err);
@@ -223,6 +225,7 @@ module.exports = {
       })
       
     } catch (error) {
+      console.log(error)
       return res.json({
         message: "Internal server error",
         status: 500,
