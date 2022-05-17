@@ -8,4 +8,5 @@ router.post('/login',userController.login);
 router.post('/upload-profile',auth,
 userController.uploadProfileImage);
 router.post('/update-profile',auth,userController.updateProfile);
+router.post('/fetchDataById',auth,userController.fetchDataById);
 module.exports =router;

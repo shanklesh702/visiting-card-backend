@@ -5,8 +5,8 @@ const User = require("../models/users");
 const Otp = require("../models/otp");
 const sendEmail = require("../helpers/sendEmail");
 const { response } = require("express");
-const upload = require('../middlewares/upload')
-const multer = require('multer')
+const upload = require("../middlewares/upload");
+const multer = require("multer");
 const saltRounds = 10;
 module.exports = {
   register: async (req, res) => {
@@ -101,6 +101,7 @@ module.exports = {
                 return res.json({
                   message: "User successfuly login",
                   token,
+                  data: user,
                   status: 200,
                   success: true,
                 });
@@ -179,8 +180,8 @@ module.exports = {
   uploadProfileImage: async (req, res) => {
     try {
       const { id } = req.body;
-      console.log(id)
-      upload(req, res, err => {
+      console.log(id);
+      upload(req, res, (err) => {
         if (err instanceof multer.MulterError) {
           console.log("multer error when uploading file:", err);
           return res.sendStatus(500);
@@ -189,43 +190,42 @@ module.exports = {
           return res.sendStatus(500);
         }
         const file = req.file;
-      const schema = joi.alternatives(
-        joi.object({
-          id: joi.string().required(),
-        })
-      );
-      const result = schema.validate(req.body);
-      if (result.error) {
-        const message = result.error.details.map((i) => i.message).join(",");
-        return res.json({
-          status: 400,
-          success: false,
-          message: message,
-        });
-      } else {
-        User.findByIdAndUpdate(
-          { _id: id },
-          { $set: { profile: __baseDir + "/upload/" + file.filename } }
-        ).then((data) => {
-          if (data !== null) {
-            return res.json({
-              message: "upload profile success",
-              status: 200,
-              success: true,
-            });
-          } else {
-            return res.json({
-              message: "upload profle failed",
-              status: 400,
-              success: false,
-            });
-          }
-        });
-      }
-      })
-      
+        const schema = joi.alternatives(
+          joi.object({
+            id: joi.string().required(),
+          })
+        );
+        const result = schema.validate(req.body);
+        if (result.error) {
+          const message = result.error.details.map((i) => i.message).join(",");
+          return res.json({
+            status: 400,
+            success: false,
+            message: message,
+          });
+        } else {
+          User.findByIdAndUpdate(
+            { _id: id },
+            { $set: { profile: __baseDir + "/upload/" + file.filename } }
+          ).then((data) => {
+            if (data !== null) {
+              return res.json({
+                message: "upload profile success",
+                status: 200,
+                success: true,
+              });
+            } else {
+              return res.json({
+                message: "upload profle failed",
+                status: 400,
+                success: false,
+              });
+            }
+          });
+        }
+      });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return res.json({
         message: "Internal server error",
         status: 500,
@@ -373,6 +373,48 @@ module.exports = {
           } else {
             return res.json({
               message: "user not found",
+              status: 400,
+              success: false,
+            });
+          }
+        });
+      }
+    } catch (error) {
+      return res.json({
+        message: "Internal server error",
+        status: 500,
+        success: false,
+      });
+    }
+  },
+  fetchDataById: async (req, res) => {
+    try {
+      const { id } = req.body;
+      const schema = joi.alternatives(
+        joi.object({
+          id: joi.string().required(),
+        })
+      );
+      const result = schema.validate(req.body);
+      if (result.error) {
+        const message = result.error.details.map((i) => i.message).join(",");
+        return res.json({
+          status: 400,
+          success: false,
+          message: message,
+        });
+      } else {
+        User.findOne({ _id: id }).then((data) => {
+          if (data !== null) {
+            return res.json({
+              message: "data fetch success",
+              status: 200,
+              success: true,
+              data: data,
+            });
+          } else {
+            return res.json({
+              message: "Data failed to fetch",
               status: 400,
               success: false,
             });
