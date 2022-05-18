@@ -24,11 +24,12 @@ app.get("/",(req,res,next) => {
     
 });
 app.use('/user',user);
+let PORT = process.env.PORT  || 5000;
 mongoose.connect(dbConfig.url,{
     useUnifiedTopology:true,
     useNewUrlParser:true,
 }).then( () =>{
-    app.listen(5000,() => console.log("the server listening on port 5000")).on("error", function (err) {
+    app.listen(PORT || 5000,() => console.log(`the server listening on port ${PORT}`)).on("error", function (err) {
         process.once("SIGUSR2", function () {
           process.kill(process.pid, "SIGUSR2");
         });
