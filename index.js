@@ -28,7 +28,7 @@ mongoose.connect(dbConfig.url,{
     useUnifiedTopology:true,
     useNewUrlParser:true,
 }).then( () =>{
-    app.listen(4000,() => console.log("the server listening on port 5000")).on("error", function (err) {
+    app.listen(5000,() => console.log("the server listening on port 5000")).on("error", function (err) {
         process.once("SIGUSR2", function () {
           process.kill(process.pid, "SIGUSR2");
         });
