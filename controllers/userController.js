@@ -54,11 +54,11 @@ export async function register(req, res) {
                 });
              
                  //Send email confirmation mail
-                 sendConfirmationEmail(
-                  user_data.fullName,
-                  user_data.email,
-                  '1001'
-               );
+              //    sendConfirmationEmail(
+              //     user_data.fullName,
+              //     user_data.email,
+              //     '1001'
+              //  );
 
               } else {
                 return res.json({
@@ -94,18 +94,18 @@ export function login(req, res) {
       User.findOne({ email: email }).then((user) => {
         if (user) {
           //  Check weather the usere emailid is verified or not
-          if (!user.isVerified) {
-            res.status(401).send({
-                        message: "Pending Account. Please Verify Your Email!",
+          // if (!user.isVerified) {
+          //   res.status(401).send({
+          //               message: "Pending Account. Please Verify Your Email!",
                       
-                      })
-                 //Send email confirmation mail
-                 sendConfirmationEmail(
-                  user.fullName,
-                  user.email,
-                  '1001'
-               );
-                    }
+          //             })
+          //        //Send email confirmation mail
+          //        sendConfirmationEmail(
+          //         user.fullName,
+          //         user.email,
+          //         '1001'
+          //      );
+          //           }
 
           bcrypt.compare(password, user.password).then((data) => {
             if (data) {
