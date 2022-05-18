@@ -24,7 +24,7 @@ app.get("/",(req,res,next) => {
     
 });
 app.use('/user',user);
-mongoose.connect(dbConfig.localUrl,{
+mongoose.connect(dbConfig.url,{
     useUnifiedTopology:true,
     useNewUrlParser:true,
 }).then( () =>{
