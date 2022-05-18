@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     otp : {
-      type: Number
+      type: String
     },
     email: {
       type: String,
