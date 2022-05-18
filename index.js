@@ -1,6 +1,7 @@
 import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 import user from './routes/user.js';
+import cards from './routes/cards.js';
 import { default as mongoose } from 'mongoose';
 import dbConfig from './config/dbconfig.js';
 const app = express();
@@ -24,6 +25,7 @@ app.get("/",(req,res,next) => {
     
 });
 app.use('/user',user);
+app.use('/cards',cards);
 let PORT = process.env.PORT  || 5000;
 mongoose.connect(dbConfig.url,{
     useUnifiedTopology:true,

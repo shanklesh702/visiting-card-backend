@@ -7,12 +7,13 @@ const auth = async (req, res, next) => {
     if (bearerHeader != undefined) {
       const bearer = bearerHeader.split(" ");
       req.token = bearer[1];
-      console.log("==",req.token)
+      // console.log("==",req.token)
       const verifyUser = jwt.verify(req.token, "secret");
-      console.log(verifyUser.data)
+      // console.log(verifyUser.data)
       const user = await User.findOne({ _id: verifyUser.data });
-      console.log(user)
+      // console.log(user)
       if (user !== null) {
+        req.user = user;
         next();
       } else {
         return res.json({
