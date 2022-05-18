@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import normalize from 'normalize-mongoose';
 const userSchema = new mongoose.Schema(
   {
     fullName: {
@@ -39,11 +40,17 @@ const userSchema = new mongoose.Schema(
     isVerified:{
       type:Boolean,
       default:false
+    },
+    role: {
+      type: String,
+      enum: ['user','admin']
+      
     }
   },
   {
     timestamps: true,
   }
 );
+userSchema.plugin(normalize);
 const User = mongoose.model("user", userSchema);
 export default User;
