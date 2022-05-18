@@ -1,12 +1,30 @@
-const express = require('express');
-const router =express.Router();
-const userController = require('../controllers/userController');
-const upload = require('../middlewares/upload');
-const auth = require('../middlewares/auth');
-router.post('/register',userController.register);
-router.post('/login',userController.login);
+import  express  from 'express';
+import { body } from 'express-validator';
+import { verifyEmail,register, login, uploadProfileImage, updateProfile, fetchDataById, fetchAllUsers } from '../controllers/userController.js';
+import upload from '../middlewares/upload.js';
+import auth from '../middlewares/auth.js';
+
+const router = express.Router();
+
+router.post('/register',
+        [body('email').isEmail(),
+        body('password').isLength({min:5}),
+        body('fullName').isLength({min:1})],register);
+
+router.post('/login',[body('email').isEmail(),
+        body('password').isLength({min:1})],login);
+
 router.post('/upload-profile',auth,
-userController.uploadProfileImage);
-router.post('/update-profile',auth,userController.updateProfile);
-router.post('/fetchDataById',auth,userController.fetchDataById);
-module.exports =router;
+        uploadProfileImage);
+
+router.put('/update-profile', auth,[
+        body('id').isLength({min:5}),
+        body('email').isEmail(),
+        body('fullName').isLength({min:1})
+],updateProfile);
+
+router.post('/fetchDataById',auth,fetchDataById);
+router.get('/',auth, fetchAllUsers)
+router.post('/verify',verifyEmail)
+export default router;
+

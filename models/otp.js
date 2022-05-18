@@ -1,4 +1,4 @@
-const  mongoose =require('mongoose');
+import mongoose from 'mongoose';
 const OtpSchema = new mongoose.Schema({
     otp:{
         type:Number
@@ -13,4 +13,4 @@ const OtpSchema = new mongoose.Schema({
     }
 });
 const Otp = mongoose.model('otp',OtpSchema);
-module.exports = Otp;
+export default Otp;

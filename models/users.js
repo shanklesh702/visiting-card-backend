@@ -1,8 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const userSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
+    },
+    otp : {
+      type: Number
     },
     email: {
       type: String,
@@ -43,4 +46,4 @@ const userSchema = new mongoose.Schema(
   }
 );
 const User = mongoose.model("user", userSchema);
-module.exports = User;
+export default User;
