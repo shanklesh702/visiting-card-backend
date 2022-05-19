@@ -6,8 +6,8 @@ import auth from "../middlewares/auth.js";
 const router = express.Router();
 
 
-router.post('/',auth,createCard);
-router.get('/', auth, getAllCards);
+router.post('/:userId',auth,createCard);
+router.get('/:userId', auth, getAllCards);
 router.put('/:cardId',auth, updateCardProfile);
 
 export default router;

@@ -3,6 +3,9 @@ import normalize from 'normalize-mongoose';
 
 
 const cardProfileSchema = new mongoose.Schema({
+      name: {
+          type: String
+      },
       designation : {
           type: String
       },
@@ -17,6 +20,12 @@ const cardProfileSchema = new mongoose.Schema({
       },
       userId: {
           type: mongoose.Schema.Types.ObjectId
+      },
+      email: {
+          type: String
+      },
+      facebookId : {
+          type: String
       }
 },
 {

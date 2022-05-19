@@ -3,12 +3,14 @@ import { getResponse, buildErrorResponse } from "../util/responseObject.js";
 export async function createCard(req, res) {
 
     try {
-        console.log("user",req.user)
+        
         let data = req.body;
-        console.log("data",data)
+        let userId = req.params.userId;
+        
+        
         let cardData = new CardProfile({
             ...data,
-            userId: req.user._id
+            userId: userId
         });
 
         let result = await cardData.save();
@@ -29,7 +31,9 @@ export async function createCard(req, res) {
 export async function getAllCards (req, res) {
 
     try {
-      let cards = await CardProfile.find({userId:req.user._id});
+      let userId = req.params.userId;
+
+      let cards = await CardProfile.find({userId:userId});
       
       if (cards.length) {
 
@@ -56,7 +60,7 @@ export async function updateCardProfile( req, res) {
        let cardId = req.params.cardId;
        let data = req.body;
        
-       let result = await CardProfile.findByIdAndUpdate ({_id: cardId},{...data});
+      let result = await CardProfile.findByIdAndUpdate ({_id: cardId},{...data});
 
         data = await CardProfile.findById({_id:cardId});
 
