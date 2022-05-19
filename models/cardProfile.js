@@ -38,6 +38,9 @@ const cardProfileSchema = new mongoose.Schema({
       },
       type: {
           type: String
+      },
+      method: {
+          type: String
       }
 },
 {

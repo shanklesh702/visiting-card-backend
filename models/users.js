@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
       
     },
     contacts : {
-      type : [mongoose.Schema.Types.ObjectId],default : []
+      type : [Object],default : []
     }
   },
   {

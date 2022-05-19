@@ -5,7 +5,7 @@ import CardProfile from "../models/cardProfile.js";
 export async function createContacts ( req, res) {
 
     try {
-       const { userId, cardId } = req.body;
+       const { userId, cardId, method } = req.body;
        const errors = validationResult(req);
 
        if (!errors.isEmpty()) {
@@ -15,7 +15,11 @@ export async function createContacts ( req, res) {
         let user = await User.findById({_id: userId})
             
         //insert contacts
-         user.contacts.push(cardId);
+        let obj = {
+            "cardId":cardId,
+            "method": method
+        }
+         user.contacts.push(obj);
         
          // update user
          await User.findByIdAndUpdate({_id: userId},{...user,userId},{new: true});
@@ -48,8 +52,9 @@ export async function getAllContacts( req, res) {
          
         //iterate user.contacts and get data from database
         for (let i =0; i < user.contacts.length; i++) {
-            if (user.contacts[i]) {
-              let obj = await CardProfile.findById({_id:user.contacts[i]});
+            if (user.contacts[i].cardId) {
+              let obj = await CardProfile.findById({_id:user.contacts[i].cardId});
+              obj.method = user.contacts[i].method;
               contacts.push(obj)
             }
         };
