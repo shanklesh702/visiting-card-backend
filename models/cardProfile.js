@@ -26,6 +26,18 @@ const cardProfileSchema = new mongoose.Schema({
       },
       facebookId : {
           type: String
+      },
+      instaId : {
+          type: String
+      },
+      twitterId : {
+          type: String
+      },
+      linkendinId: {
+          type: String
+      },
+      type: {
+          type: String
       }
 },
 {

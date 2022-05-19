@@ -45,6 +45,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ['user','admin']
       
+    },
+    contacts : {
+      type : [mongoose.Schema.Types.ObjectId],default : []
     }
   },
   {
