@@ -1,5 +1,5 @@
 import CardProfile from "../models/cardProfile.js";
-import { getResponse } from "../util/responseObject.js";
+import { getResponse, buildErrorResponse } from "../util/responseObject.js";
 export async function createCard(req, res) {
 
     try {
@@ -48,5 +48,23 @@ export async function getAllCards (req, res) {
             "status": 500,
             "error": error
         })
+    }
+}
+
+export async function updateCardProfile( req, res) {
+    try {
+       let cardId = req.params.cardId;
+       let data = req.body;
+       
+       let result = await CardProfile.findByIdAndUpdate ({_id: cardId},{...data});
+
+        data = await CardProfile.findById({_id:cardId});
+
+        res.status(200).json(await getResponse(data,200,'Card profile updated successfully'));
+      
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(await buildErrorResponse(error,500,'Internal server error'));
     }
 }
