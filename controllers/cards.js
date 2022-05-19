@@ -72,3 +72,24 @@ export async function updateCardProfile( req, res) {
         res.status(500).json(await buildErrorResponse(error,500,'Internal server error'));
     }
 }
+
+export async function getCardById(req, res ) {
+    try {
+     let cardId = req.params.cardId;
+     let cardData = await CardProfile.findById({_id: cardId})
+    
+     if (cardData) {
+
+        res.status(200).json(await getResponse(cardData,200,'Card fetched successfully'));
+     
+    } else {
+
+        res.status(400).json(await buildErrorResponse({},400,'Card not found'));
+    }
+    } catch (error) {
+
+        console.log(error)
+        res.status(500).json(await buildErrorResponse(error,500,'Internal server error'));
+    
+    }
+}
