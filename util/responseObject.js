@@ -1,9 +1,10 @@
 
-export async function getResponse(data,code,message) {
+export async function getResponse(data,code,message,success = true) {
 
     return {
          "status": code,
          "message": message,
+         "success": success,
          "data":data
     }
 }
