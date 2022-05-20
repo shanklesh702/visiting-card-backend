@@ -4,7 +4,7 @@ import { verifyEmail,register, login, uploadProfileImage, updateProfile, fetchDa
 import upload from '../middlewares/upload.js';
 import auth from '../middlewares/auth.js';
 import { getAllCards } from '../controllers/cards.js';
-import { createContacts, getAllContacts } from '../controllers/contacts.js';
+import { createContacts, getAllContacts, getGroupWiseContacts } from '../controllers/contacts.js';
 
 const router = express.Router();
 
@@ -18,7 +18,7 @@ router.post('/verify',verifyEmail)
 router.get('/cards/:userId',auth,getAllCards);
 router.post('/contacts', auth,[body('userId').notEmpty(),body('cardId').notEmpty()], createContacts);
 router.get('/contacts/:userId',auth, getAllContacts);
-
+router.get('/contacts/group/:userId',auth,getGroupWiseContacts)
 
 export default router;
 

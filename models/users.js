@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
     fullName: {
       type: String,
     },
-    otp : {
+    otp: {
       type: String
     },
     email: {
@@ -34,26 +34,26 @@ const userSchema = new mongoose.Schema(
       email: { type: String },
       profile: { type: String },
     },
-    profile:{
-      type:String
+    profile: {
+      type: String
     },
-    isVerified:{
-      type:Boolean,
-      default:false
+    isVerified: {
+      type: Boolean,
+      default: false
     },
     role: {
       type: String,
-      enum: ['user','admin']
-      
+      enum: ['user', 'admin']
+
     },
-    contacts : {
-      type : [Object],default : []
-    }
+    contacts: [{ cardId: { type: mongoose.Schema.Types.ObjectId, ref: 'cardProfile' }, method: { type: String, default: "" } }],
+
   },
   {
     timestamps: true,
   }
 );
+
 userSchema.plugin(normalize);
 const User = mongoose.model("user", userSchema);
 export default User;
