@@ -34,14 +34,13 @@ export async function getAllCards (req, res) {
       let userId = req.params.userId;
 
       let cards = await CardProfile.find({userId:userId});
-      
       if (cards.length) {
 
         res.status(200).json(await getResponse(cards,200,'Data found'));
 
       } else {
-
-        res.status(204).json(await getResponse(cards,204,'Cards are not available'));
+       
+        res.status(202).json(await getResponse(cards,202,'Cards are not available'));
 
       }
 
