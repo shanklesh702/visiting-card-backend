@@ -41,7 +41,7 @@ export async function getAllCards (req, res) {
 
       } else {
 
-        res.status(404).json(await getResponse(cards,404,'Cards are not available'));
+        res.status(204).json(await getResponse(cards,204,'Cards are not available'));
 
       }
 
@@ -84,7 +84,7 @@ export async function getCardById(req, res ) {
      
     } else {
 
-        res.status(400).json(await buildErrorResponse({},400,'Card not found'));
+        res.status(204).json(await buildErrorResponse({},204,'Card not available'));
     }
     } catch (error) {
 
