@@ -2,16 +2,21 @@ import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 import user from './routes/user.js';
 import cards from './routes/cards.js';
+import upload from './routes/upload.js';
 import { default as mongoose } from 'mongoose';
 import dbConfig from './config/dbconfig.js';
+
+
 const app = express();
 app.use(json());
 app.use(urlencoded({
     extended:true
 }));
 app.use(cors());
-app.use(express.static("public"));
-// app.use("/upload",static("upload"));
+// app.use(express.static("public"));
+app.use(express.static('./public'));
+app.use('/uploads',express.static('uploads'));
+
 global.__baseDir="https://visiting-card-backend.herokuapp.com";
 app.get("/",(req,res,next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -26,8 +31,12 @@ app.get("/",(req,res,next) => {
 });
 app.use('/user',user);
 app.use('/cards',cards);
+app.use('/upload',upload);
+
+
 let PORT = process.env.PORT  || 5000;
-mongoose.connect(dbConfig.url,{
+
+mongoose.connect(dbConfig.localUrl,{
     useUnifiedTopology:true,
     useNewUrlParser:true,
 }).then( () =>{

@@ -4,7 +4,8 @@ var storage = diskStorage({
       cb(null, './public/upload')
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname)
+      const ext = file.mimetype.split("/")[1];
+      cb(null, `${file.fieldname}-${Date.now()}.${ext}`)
     }
 })
 var upload = multer({ storage: storage }).single('image')
