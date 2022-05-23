@@ -36,7 +36,7 @@ app.use('/upload',upload);
 
 let PORT = process.env.PORT  || 5000;
 
-mongoose.connect(dbConfig.localUrl,{
+mongoose.connect(dbConfig.url,{
     useUnifiedTopology:true,
     useNewUrlParser:true,
 }).then( () =>{
