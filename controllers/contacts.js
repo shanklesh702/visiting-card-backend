@@ -50,7 +50,7 @@ export async function getAllContacts(req, res) {
     
      contacts = user.contacts || [];
     if (contacts && contacts.length > 0) {
-     
+      
       let result = await getContactsListBasedOnType(contacts, type, ismethod, limited, limit,page);
       res.status(200).json(await getResponse(result, 200, 'Contacts fetched successfully'));
     } else {
@@ -100,13 +100,21 @@ const getContactsByCategory = (data, type, isLimited = "true", limit = 5,page=1)
       if (isLimited.toString() == "true") {
         if (i >= startIndex && i < endIndex) {
           const { cardId, method } = e;
-          const _ci = JSON.parse(JSON.stringify(cardId));
+          const _ci = {};
+          _ci.id = cardId.id;
+          _ci.profilePic = cardId.profilePic;
+          _ci.name = cardId.name;
+          // const _ci = JSON.parse(JSON.stringify(cardId));
           _ci.method = method || "";
           result.contacts.push(_ci);
         }
       } else {
         const { cardId, method } = e;
-        const _ci = JSON.parse(JSON.stringify(cardId));
+        // const _ci = JSON.parse(JSON.stringify(cardId));
+        const _ci = {};
+        _ci.id = cardId.id;
+        _ci.profilePic = cardId.profilePic;
+        _ci.name = cardId.name;
         _ci.method = method || "";
         result.contacts.push(_ci);
       }
@@ -118,13 +126,21 @@ const getContactsByCategory = (data, type, isLimited = "true", limit = 5,page=1)
       if (isLimited.toString() == "true") {
         if (i >= startIndex && i < endIndex) {
           const { cardId, method } = e;
-          const _ci = JSON.parse(JSON.stringify(cardId));
+          // const _ci = JSON.parse(JSON.stringify(cardId));
+        const _ci = {};
+        _ci.id = cardId.id;
+        _ci.profilePic = cardId.profilePic;
+        _ci.name = cardId.name;
           _ci.method = method || "";
           result.contacts.push(_ci);
         }
       } else {
         const { cardId, method } = e;
-        const _ci = JSON.parse(JSON.stringify(cardId));
+        // const _ci = JSON.parse(JSON.stringify(cardId));
+        const _ci = {};
+        _ci.id = cardId.id;
+        _ci.profilePic = cardId.profilePic;
+        _ci.name = cardId.name;
         _ci.method = method || "";
         result.contacts.push(_ci);
       }
@@ -144,14 +160,23 @@ const getContactsByMethod = (data, methodName, isLimited = "true", limit = 5, pa
     if (isLimited.toString() == "true") {
       if (i >= startIndex && i < endIndex) {
         let { cardId, method } = e;
-        let _ci = JSON.parse(JSON.stringify(cardId));
+        //  let _ci = JSON.parse(JSON.stringify(cardId));
+        const _ci = {};
+        _ci.id = cardId.id;
+        _ci.profilePic = cardId.profilePic;
+        _ci.name = cardId.name;
         _ci.method = method || "";
         result.contacts.push(_ci);
       }
     } else {
       const { cardId, method } = e;
-      const _ci = JSON.parse(JSON.stringify(cardId));
+      // const _ci = JSON.parse(JSON.stringify(cardId));
+      const _ci = {};
+      _ci.id = cardId.id;
+      _ci.profilePic = cardId.profilePic;
+      _ci.name = cardId.name;
       _ci.method = method || "";
+    
       result.contacts.push(_ci);
     }
   })
