@@ -15,7 +15,6 @@ import { generatorOTP } from '../helpers/otpGenerator.js';
 const saltRounds = 10;
 
 export async function register(req, res) {
-  console.log("================sdds=asas");
   try {
     const { fullName, email, password, profilePic } = req.body;
     const errors = validationResult(req);
@@ -35,8 +34,7 @@ export async function register(req, res) {
         bcrypt.genSalt(saltRounds, function (err, salt) {
         bcrypt.hash(password, salt, function (err, hash) {
             
-            let otp = generatorOTP();
-            console.log("otp",otp);
+           
             
             let data = new User({
               email: email,
@@ -53,12 +51,6 @@ export async function register(req, res) {
                   success: true,
                 });
              
-                 //Send email confirmation mail
-              //    sendConfirmationEmail(
-              //     user_data.fullName,
-              //     user_data.email,
-              //     '1001'
-              //  );
 
               } else {
                 return res.json({
@@ -123,17 +115,17 @@ export function login(req, res) {
                 success: true,
               });
             } else {
-              return res.status(400).json({
+              return res.status(203).json({
                 message: "Wrong password entered",
-                status: 400,
+                status: 203,
                 success: false,
               });
             }
           });
         } else {
-          return res.status(400).json({
+          return res.status(203).json({
             message: "Email not found",
-            status: 400,
+            status: 203,
             success: false,
           });
         }
