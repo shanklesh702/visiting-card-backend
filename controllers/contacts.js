@@ -92,7 +92,7 @@ export async function getGroupWiseContacts(req, res) {
 
 }
 
-const getContactsByCategory = (data, type, isLimited = "true", limit = 5,page=1) => {
+const getContactsByCategory = (data, type, isLimited = "true", limit = 8,page=1) => {
   const result = { contacts: [], total: 0 };
   if (typeof type !== "string") return result;
   
@@ -156,7 +156,7 @@ const getContactsByCategory = (data, type, isLimited = "true", limit = 5,page=1)
   return result;
 }
 
-const getContactsByMethod = (data, methodName, isLimited = "true", limit = 5, page = 1) => {
+const getContactsByMethod = (data, methodName, isLimited = "true", limit = 8, page = 1) => {
   const result = { contacts: [], total: 0 };
   if (typeof methodName !== "string") return result;
   let startIndex = (Number(page) - 1) * Number(limit);
@@ -201,7 +201,7 @@ const getContactsOfMethod = (methods, data) => {
   if (methods && methods.length > 0) {
     methods.forEach((method, index) => {
       let obj = {};
-      obj = getContactsByMethod(data, method, true, 5);
+      obj = getContactsByMethod(data, method, true, 8);
       group.groupName =  method;
       group.total = obj.total;
       group.contacts = obj.contacts;
