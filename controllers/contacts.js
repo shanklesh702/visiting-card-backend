@@ -23,10 +23,17 @@ export async function createContacts(req, res) {
 
 
     // update user
-    await User.findByIdAndUpdate({ _id: userId }, { ...user, userId }, { new: true });
+    let r = await User.findByIdAndUpdate({ _id: userId }, { ...user, userId }, { new: true });
+   
+    // user = await User.findById({ _id: userId }, { fullName: 1, email: 1, contacts: 1 })
+    if (r) {
+      
+      res.status(201).json(await getResponse(req.body, 201, 'Contact saved successfully'));
 
-    user = await User.findById({ _id: userId }, { fullName: 1, email: 1, contacts: 1 })
-    res.status(201).json(await getResponse(user, 201, 'Contact saved successfully'));
+    }else {
+      res.status(500).json(await getResponse({}, 500, 'Something went wrong, Please try after some time'));
+
+    }
 
   } catch (error) {
     console.log(error)
