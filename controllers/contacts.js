@@ -191,10 +191,27 @@ const getContactsByMethod = (data, methodName, isLimited = "true", limit = 5, pa
 }
 
 const getContactsOfMethod = (methods, data) => {
-  let result = {};
+  
+  let result = [];
+  let group = {
+    groupName : '',
+    total: '',
+    contacts: []
+  }
   if (methods && methods.length > 0) {
     methods.forEach((method, index) => {
-      result[method] = getContactsByMethod(data, method, true, 5);
+      let obj = {};
+      obj = getContactsByMethod(data, method, true, 5);
+      group.groupName =  method;
+      group.total = obj.total;
+      group.contacts = obj.contacts;
+      result.push(group);
+
+      group = {
+        groupName : '',
+        total: '',
+        contacts: []
+      }
     })
   }
   return result;
@@ -213,7 +230,18 @@ const getUniqueMethods = (data) => {
   result = uniqueValues;
   return [...result];
 }
-
+const getUniqueCategory = (data) => {
+  let result = [];
+  var uniqueValues =[];
+  if (data && data.length > 0) {
+    data.forEach((item) => {
+      result.push(item.cardId.type);
+    })
+    uniqueValues = new Set([...result]);
+  }
+  result = uniqueValues;
+  return [...result];
+}
 async function prepareObj(userContacts) {
   return new Promise(async (resolve, reject) => {
     let resObj = {
@@ -221,13 +249,34 @@ async function prepareObj(userContacts) {
       work: { contacts: [], total: 0 },
       personal: { contacts: [], total: 0 }
     }
+    let data = [];
+    let group = {
+      groupName : '',
+      total: '',
+      contacts: []
+    }
     const uMethods = getUniqueMethods(userContacts);
-    resObj.work = getContactsByCategory(userContacts, "work");
-    resObj.personal = getContactsByCategory(userContacts, "personal");
-    resObj.all = getContactsByCategory(userContacts, "all");
-    const methodResult = getContactsOfMethod(uMethods, userContacts);
-    resObj = { ...resObj, ...methodResult };
-    resolve(resObj);
+    const uCategory= getUniqueCategory(userContacts);
+    let type = [...uCategory, 'all'];
+    type.forEach((typ => {
+      let obj = {};
+      obj= getContactsByCategory(userContacts, typ);
+      group.groupName = typ;
+      group.total = obj.total;
+      group.contacts = obj.contacts;
+
+      data.push(group);
+      
+      group = {
+        groupName : '',
+        total: '',
+        contacts: []
+      }
+    }))
+    
+     const methodResult = getContactsOfMethod(uMethods, userContacts);
+     data = [ ...data,...methodResult]
+     resolve(data);
   });
 }
 
