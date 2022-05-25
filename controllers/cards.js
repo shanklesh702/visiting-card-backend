@@ -7,7 +7,7 @@ export async function createCard(req, res) {
         let data = req.body;
         let userId = req.params.userId;
         
-        
+        console.log("req",req.body)
         let cardData = new CardProfile({
             ...data,
             userId: userId
