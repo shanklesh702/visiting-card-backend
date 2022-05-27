@@ -5,10 +5,12 @@ import cards from './routes/cards.js';
 import upload from './routes/upload.js';
 import { default as mongoose } from 'mongoose';
 import dbConfig from './config/dbconfig.js';
-
+import bodyParser from 'body-parser';
 
 const app = express();
-app.use(json());
+
+app.use(bodyParser.json({limit: '50mb'}));
+// app.use(json());
 app.use(urlencoded({
     extended:true
 }));
