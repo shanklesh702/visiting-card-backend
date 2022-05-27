@@ -344,16 +344,17 @@ async function prepareObj(userContacts,list =false) {
 
 async function getContactsListBasedOnType(contacts,list, type, isMethod, limited, limit,page) {
   return new Promise((resolve, reject) => {
-    let result = { contacts: [], total: 0, type: type };
+    let result = [];
+    // let result = { contacts: [], total: 0, type: type };
     if (isMethod === "true") {
       result = getContactsByMethod(contacts,list, type, limited, limit,page);
     } else {
       result = getContactsByCategory(contacts,list, type, limited, limit,page);
     }
-    result.isMethod = isMethod;
-    result.type = type;
-    result.isLimited = limited;
-    result.limit = limit;
-    resolve(result);
+    // result.isMethod = isMethod;
+    // result.type = type;
+    // result.isLimited = limited;
+    // result.limit = limit;
+    resolve(result.contacts);
   });
 }
