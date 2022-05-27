@@ -16,7 +16,7 @@ router.get('/:userId',auth,fetchDataById);
 router.get('/',auth, fetchAllUsers)
 router.post('/verify',verifyEmail)
 router.get('/cards/:userId',auth,getAllCards);
-router.post('/contacts', auth,[body('userId').notEmpty(),body('cardId').notEmpty()], createContacts);
+router.post('/contacts', auth,[body('userId').notEmpty(),body('cardId').notEmpty(),body('method').notEmpty()], createContacts);
 router.get('/contacts/:userId',auth, getAllContacts);
 router.get('/contacts/group/:userId',auth,getGroupWiseContacts)
 

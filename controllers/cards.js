@@ -1,12 +1,23 @@
 import CardProfile from "../models/cardProfile.js";
 import { getResponse, buildErrorResponse } from "../util/responseObject.js";
+import Response from "../util/reponse.code.js";
 export async function createCard(req, res) {
 
     try {
         
         let data = req.body;
         let userId = req.params.userId;
+        let { name, designation, company} = req.body;
         
+        if (!name){
+           return  Response.ERROR(res,'Bad request',"Please send name in payload");
+        }
+        if (!designation) {
+            return Response.ERROR(res,'Bad request','Please send designation in the payload')
+        }
+        if (!company) {
+            return Response.ERROR(res,'Bad request','Please send company in the payload')
+        }
         console.log("req",req.body)
         let cardData = new CardProfile({
             ...data,
@@ -16,15 +27,12 @@ export async function createCard(req, res) {
         let result = await cardData.save();
 
         console.log(result);
-        res.status(201).json(await getResponse(result,201,'Data save successfully'));
+         return Response.CREATED(res,result,'Card created successfully');
 
     }catch (error) {
+
         console.log(error)
-        res.status(500).send({
-            "message": "Internal server error",
-            "status": 500,
-            "error": error
-        })
+        return Response.SERVERERROR(res,error,"Internal server error");
     }
 }
 
@@ -35,22 +43,19 @@ export async function getAllCards (req, res) {
 
       let cards = await CardProfile.find({userId:userId});
       if (cards.length) {
-
-        res.status(200).json(await getResponse(cards,200,'Data found'));
-
+        
+        return Response.OK(res,cards,'Cards fetched successfully');
+        
       } else {
-       
-        res.status(202).json(await getResponse(cards,202,'Cards are not available'));
+        
+        return Response.NOTAVAILABLE(res,cards,'Cards are not available');
 
       }
-
     } catch (error) {
+
         console.log(error)
-        res.status(500).json({
-            "message": "Internal server error",
-            "status": 500,
-            "error": error
-        })
+        return Response.SERVERERROR(res,error,"Internal server error");
+    
     }
 }
 
@@ -58,17 +63,23 @@ export async function updateCardProfile( req, res) {
     try {
        let cardId = req.params.cardId;
        let data = req.body;
-       
-      let result = await CardProfile.findByIdAndUpdate ({_id: cardId},{...data});
-
-        data = await CardProfile.findById({_id:cardId});
-
-        res.status(200).json(await getResponse(data,200,'Card profile updated successfully'));
+     
+       if (Object.keys(data).length == 0) {
+           return Response.ERROR(res,{error:'Payload is empty'},'Please send payload in request object');
+       }
+        let result = await CardProfile.findByIdAndUpdate ({_id: cardId},{...data});
+        
+        if (result){
+            return Response.OK(res,data,'Card updated successfully')
+            
+        }else {
+            return Response.SERVERERROR(res,{error:' Internal server error'},'Card not updated, Please check cardId or try after some time')
+        }
       
 
     } catch (error) {
         console.log(error)
-        res.status(500).json(await buildErrorResponse(error,500,'Internal server error'));
+        return Response.SERVERERROR(res,error)
     }
 }
 
@@ -76,19 +87,20 @@ export async function getCardById(req, res ) {
     try {
      let cardId = req.params.cardId;
      let cardData = await CardProfile.findById({_id: cardId})
-    
-     if (cardData) {
-
-        res.status(200).json(await getResponse(cardData,200,'Card fetched successfully'));
      
-    } else {
+    if (cardData) {
 
-        res.status(204).json(await buildErrorResponse({},204,'Card not available'));
+        return Response.OK(res,cardData,'Card fetched successfully'); 
+    
+    } else {
+        
+        return Response.NOTAVAILABLE(res,{},'Card is not available');
+    
     }
     } catch (error) {
 
         console.log(error)
-        res.status(500).json(await buildErrorResponse(error,500,'Internal server error'));
+        return Response.SERVERERROR(res,error)
     
     }
 }

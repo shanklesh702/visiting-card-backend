@@ -11,7 +11,7 @@ import upload from "../middlewares/upload.js";
 import { MulterError } from "multer";
 import { sendConfirmationEmail } from '../helpers/sendConfirmationEmail.js';
 import { generatorOTP } from '../helpers/otpGenerator.js';
-
+import Response_Obj from "../util/reponse.code.js"
 const saltRounds = 10;
 
 export async function register(req, res) {
@@ -20,16 +20,14 @@ export async function register(req, res) {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return res.status(400).json({ error: errors.array() });
+      return Response_Obj.ERROR(res,errors.array(),'Please provide all details')
+      // return res.status(400).json({ error: errors.array() });
     }
 
     User.findOne({ email: email }).then((user) => {
       if (user) {
-        return res.status(400).json({
-          message: "Email already exist",
-          status: 400,
-          success: false,
-        });
+        return Response_Obj.ERROR(res,{},'Email already exist')
+        
       } else {
         bcrypt.genSalt(saltRounds, function (err, salt) {
         bcrypt.hash(password, salt, function (err, hash) {
@@ -40,22 +38,17 @@ export async function register(req, res) {
               email: email,
               fullName: fullName,
               password: hash,
-              profile: profilePic,
-              otp: otp
+              profile: profilePic
             });
             data.save().then((user_data) => {
               if (user_data !== null) {
-                res.status(201).json({
-                  message: "user register success",
-                  status: 200,
-                  success: true,
-                });
-             
 
+                return Response_Obj.CREATED(res,req.body,'User created successfully');
+          
               } else {
-                return res.json({
-                  message: "failed to add user",
-                });
+
+                return Response_Obj.NOTAVAILABLE(res,req,body,'Failed to register the user')
+              
               }
             });
           });
@@ -65,11 +58,7 @@ export async function register(req, res) {
 
   } catch (error) {
     console.log("++++++++", error);
-    return res.json({
-      message: "Internal server error",
-      status: 500,
-      success: false,
-    });
+    return Response_Obj.SERVERERROR(res,error);
   }
 }
 
@@ -79,26 +68,14 @@ export function login(req, res) {
     const error = validationResult(req);
 
     if (!error.isEmpty()) {
-      return res.status(400).json({error: error.array()})
+      
+      return Response_Obj.ERROR(res,error.array(),"please provide all details")
+
     }
     console.log(req.body);
    
-      User.findOne({ email: email }).then((user) => {
+      User.findOne({ email: email },{contacts:0}).then((user) => {
         if (user) {
-          //  Check weather the usere emailid is verified or not
-          // if (!user.isVerified) {
-          //   res.status(401).send({
-          //               message: "Pending Account. Please Verify Your Email!",
-                      
-          //             })
-          //        //Send email confirmation mail
-          //        sendConfirmationEmail(
-          //         user.fullName,
-          //         user.email,
-          //         '1001'
-          //      );
-          //           }
-
           bcrypt.compare(password, user.password).then((data) => {
             if (data) {
               const token = jwt.sign(
@@ -107,6 +84,8 @@ export function login(req, res) {
                 },
                 "secret"
               );
+              
+              
               return res.status(201).json({
                 message: "User successfuly login",
                 token,
