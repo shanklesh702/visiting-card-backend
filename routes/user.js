@@ -14,7 +14,7 @@ router.post('/upload-profile',auth,uploadProfileImage);
 router.put('/update-profile', auth,[body('id').isLength({min:5}),body('email').isEmail(),body('fullName').isLength({min:1})],updateProfile);
 router.get('/:userId',auth,fetchDataById);
 router.get('/',auth, fetchAllUsers)
-router.post('/verify',verifyEmail)
+router.post('/verify',verifyEmail);
 router.get('/cards/:userId',auth,getAllCards);
 router.post('/contacts', auth,[body('userId').notEmpty(),body('cardId').notEmpty(),body('method').notEmpty()], createContacts);
 router.get('/contacts/:userId',auth, getAllContacts);

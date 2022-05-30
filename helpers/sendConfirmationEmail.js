@@ -18,10 +18,14 @@ export function sendConfirmationEmail(name, email, confirmationCode) {
        from :user,
        to : email,
        subject: "Please confirm your account",
-       html: `<h1>E-visiting-card email confirmation</h1>
+       html: `<div>
+              <h1>E-visiting-card email confirmation</h1>
               <h2>Hello ${name}</h2>
-              <p> Thank you for subscribing. Please confirm your email by clicking on the following link</p>
-              <a href=http://localhost:8081/confirm/${confirmationCode}> Click here</a>`
+              <p> Thank you for subscribing. Please use the below code to verify the email id.</p>
+              <h3><span>Otp:</span> <span style="color:blue"> ${confirmationCode}<span></h3>
+              <p style="color:black">Regards</p>
+              <p style="color:black">E-visiting-card.com</p>
+              </div>`
    }).catch(err => console.log(err));
   }catch (error) {
       console.log(error)

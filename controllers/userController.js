@@ -30,19 +30,25 @@ export async function register(req, res) {
         
       } else {
         bcrypt.genSalt(saltRounds, function (err, salt) {
-        bcrypt.hash(password, salt, function (err, hash) {
+        bcrypt.hash(password, salt, async function(err, hash) {
             
            
-            
+            let otp = await generatorOTP();
+
             let data = new User({
               email: email,
               fullName: fullName,
               password: hash,
-              profile: profilePic
+              profile: profilePic,
+              otp: otp
             });
             data.save().then((user_data) => {
               if (user_data !== null) {
+                // generate otp and send to mail id
+              
+                sendConfirmationEmail(fullName,email,otp);
 
+             
                 return Response_Obj.CREATED(res,req.body,'User created successfully');
           
               } else {
@@ -69,13 +75,24 @@ export function login(req, res) {
 
     if (!error.isEmpty()) {
       
-      return Response_Obj.ERROR(res,error.array(),"please provide all details")
+      return Response_Obj.ERROR(res,error.array(),"Please provide all details")
 
     }
     console.log(req.body);
-   
+      
       User.findOne({ email: email },{contacts:0}).then((user) => {
         if (user) {
+          if (!user.isVerified) {
+            // generate otp and send to mail id
+              generatorOTP().then (async (otp) =>{
+              console.log(otp)
+              let s =  await User.findByIdAndUpdate({_id:user._id},{otp:otp});
+        
+              sendConfirmationEmail(user.fullName,email,otp);
+
+            })
+             return Response_Obj.NOTAVAILABLE(res,{},'Please check your mail to verify your account and try to login again')
+          }
           bcrypt.compare(password, user.password).then((data) => {
             if (data) {
               const token = jwt.sign(
@@ -85,11 +102,13 @@ export function login(req, res) {
                 "secret"
               );
               
-              
+              let returnObj = JSON.parse(JSON.stringify(user));
+              delete returnObj.password;
+              delete returnObj.otp;
               return res.status(201).json({
                 message: "User successfuly login",
                 token,
-                data: user,
+                data: returnObj,
                 status: 200,
                 success: true,
               });
@@ -436,16 +455,22 @@ export async function verifyEmail(req, res){
          email,
        });
        if (!user) {
-         return res.status(400).send({"message":"User not found"})
+         return Response_Obj.ERROR(res,{},'User not found, please register with given mail id')
+        //  return res.status(400).send({"message":"User not found"})
        }
        if (user && user.otp !== otp) {
-         return res.status(400).send({"message":"Invalid OTP"})
+         return Response_Obj.ERROR(res,{},'Invalid OTP')
+        //  return res.status(400).send({"message":"Invalid OTP"})
        }
-       const updateUser = await User.findByIdAndUpdate(user._id,{
-         $set: {isVerified : true}
-       })
+       const updateUser = await User.findByIdAndUpdate(user._id,{isVerified : true});
+       
+       if (updateUser) {
+         
+        return Response_Obj.CREATED(res,)
 
-       res.status(201).send({"message":"User verified successfully"})
+       }  else {
+         return Response_Obj.SERVERERROR(res,{},'Something went wrong, please try again')
+       }
 
      } catch (error) {
       return res.status(500).json({
