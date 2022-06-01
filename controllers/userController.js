@@ -46,7 +46,7 @@ export async function register(req, res) {
               if (user_data !== null) {
                 // generate otp and send to mail id
               
-                sendConfirmationEmail(fullName,email,otp);
+                sendConfirmationEmail(email,'"Please confirm your account"',html(fullName,otp));
 
              
                 return Response_Obj.CREATED(res,req.body,'User created successfully');
@@ -88,7 +88,7 @@ export function login(req, res) {
               console.log(otp)
               let s =  await User.findByIdAndUpdate({_id:user._id},{otp:otp});
         
-              sendConfirmationEmail(user.fullName,email,otp);
+              sendConfirmationEmail(email,'"Please confirm your account"',html(user.fullName,otp));
 
             })
              return Response_Obj.NOTAVAILABLE(res,{},'Please check your mail to verify your account and try to login again')
@@ -479,4 +479,15 @@ export async function verifyEmail(req, res){
         }]
        })
      }
+}
+
+function html(name,confirmationCode){
+  return `<div>
+  <h1>E-visiting-card email confirmation</h1>
+  <h2>Hello ${name}</h2>
+  <p> Thank you for subscribing. Please use the below code to verify the email id.</p>
+  <h3><span>Otp:</span> <span style="color:blue"> ${confirmationCode}<span></h3>
+  <p style="color:black">Regards</p>
+  <p style="color:black">E-visiting-card.com</p>
+  </div>`;
 }

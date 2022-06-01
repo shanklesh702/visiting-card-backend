@@ -2,6 +2,7 @@ import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 import user from './routes/user.js';
 import cards from './routes/cards.js';
+import forgetPasswordRouter from './routes/forget-password.js'; 
 import upload from './routes/upload.js';
 import { default as mongoose } from 'mongoose';
 import dbConfig from './config/dbconfig.js';
@@ -34,6 +35,7 @@ app.get("/",(req,res,next) => {
 app.use('/user',user);
 app.use('/cards',cards);
 app.use('/upload',upload);
+app.use('/forget-password',forgetPasswordRouter)
 
 
 let PORT = process.env.PORT  || 5000;
