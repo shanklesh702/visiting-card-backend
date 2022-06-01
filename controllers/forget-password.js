@@ -8,10 +8,10 @@ import bcrypt from "bcryptjs";
 export async function sendMailToUpdatePassword(req, res) {
     try{
         console.log("===")
-      const {email,newPassword} = req.body;
+      const email = req.query.email;
       if (!email) {
          
-        return Response_Obj.ERROR(res,{},'Please send email id in payload');
+        return Response_Obj.ERROR(res,{},'Please send email id in query params');
 
       }
        
