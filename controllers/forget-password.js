@@ -95,7 +95,7 @@ export async function resetPassword(req,res) {
 
              let result = await User.findByIdAndUpdate({_id:tokenPayload.userId},{password:hashPassword});
              if (result){
-                 return Response_Obj.OK(res,{},'Password updated successfully');
+                 return res.status(200).send('<p>Password updated successfully</p>');
               }else {
                 return Response_Obj.SERVERERROR(res,{},'Something went wrong , Please try again');       
              }
