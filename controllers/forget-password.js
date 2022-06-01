@@ -31,7 +31,7 @@ export async function sendMailToUpdatePassword(req, res) {
                 <p>Please enter new password and use given otp to reset the password</p>
                 <h3> Otp:<span style="color:blue">replaceotp</span></h3>
                 <div>
-                <form method="post" action="http://localhost:5000/forget-password/update">
+                <form method="post" action="https://visiting-cards.herokuapp.com/forget-password/update">
                 <label for="fname">New Password:</label><br>
                 <input type="password" id="password" name="password" value=""><br>
                 <label for="opt">Otp:</label><br>
