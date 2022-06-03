@@ -35,7 +35,7 @@ app.get("/",(req,res,next) => {
 app.use('/user',user);
 app.use('/cards',cards);
 app.use('/upload',upload);
-app.use('/forget-password',forgetPasswordRouter)
+app.use('/password',forgetPasswordRouter)
 
 
 let PORT = process.env.PORT  || 5000;
