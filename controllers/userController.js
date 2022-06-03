@@ -98,6 +98,7 @@ export function login(req, res) {
               const token = jwt.sign(
                 {
                   data: user._id,
+                  password:user.password
                 },
                 "secret"
               );

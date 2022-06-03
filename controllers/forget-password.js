@@ -109,3 +109,70 @@ export async function resetPassword(req,res) {
         return Response_Obj.SERVERERROR(res,{})
     }
 }
+
+export async function changePassword(req,res) {
+    try{
+        
+        if (Object.keys(req.body).length === 0) {
+
+            return Response_Obj.ERROR(res,{},'Pleae send payload')
+        }
+        const {email, oldPassword,newPassword} = req.body;
+        if (!email) {
+
+           return Response_Obj.ERROR(res,{},'Please send email in payload.')
+        
+        }
+        if(!oldPassword) {
+
+           return Response_Obj.ERROR(res,{},'Please send oldPassword in payload.')
+        
+        }
+        if (!newPassword) {
+
+            return Response_Obj.ERROR(res,{},'Please send newPassword in payload.')
+
+        }
+
+        //compare email store in database and in req body.
+        // req.user is comming from auth middleware
+      
+        if (req.user.email !== email) {
+           
+            // emaill is not of loggedin person (wrong email)
+            return Response_Obj.ERROR(res,{},'Wrong email provided.');
+
+        }
+
+        bcrypt.compare(oldPassword,req.user.password).then((data)=>{
+           
+            if (!data) {
+
+                return Response_Obj.ERROR(res,{},'Wrong oldPassword');
+            
+            }
+            //update password 
+            bcrypt.genSalt(10,async (err,salt) => {
+                if (err){
+                    return Response_Obj.SERVERERROR(res);
+                }
+                bcrypt.hash(newPassword,salt,async(err,hash)=>{
+
+                    if (err){
+                        return Response_Obj.SERVERERROR(res)
+                    }
+                    let user = await User.findByIdAndUpdate({_id:req.user.id},{password:hash});
+                    if (user !== null){
+                      return Response_Obj.CREATED(res,req.body,'Password updated successfully')
+                     }else {
+                      return Response_Obj.SERVERERROR(res);
+                     }
+                })
+            })
+        })
+
+    } catch(error) {
+        console.log(error);
+        return Response_Obj.SERVERERROR(res);
+    }
+}

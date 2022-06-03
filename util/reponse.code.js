@@ -40,7 +40,7 @@ export default  {
             message : message
         })
     },
-    SERVERERROR : (res, error = {'msg':'something went wrong'}, message = "Internal server error.") => {
+    SERVERERROR : (res, error = {'msg':'something went wrong'}, message = "Internal server error, Please try again after some time") => {
         return res.status(500).send({
             status : 500,
             success : false,
